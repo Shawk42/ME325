@@ -11,7 +11,7 @@ k_b = 0.858
 k_c = 0.59
 k_d = 1
 k_e = 0.897
-k_f = 676
+k_f = 6.76
 T_max = 150 #N-m Max torque exterted on shaft
 T_min = 50  #N-m Min torque exterted on shaft
 F = 6000    #N
@@ -24,8 +24,8 @@ b = 175*mm   #Distance from right end of shaft to force [m]
 a = l-b      #Distance from left end of shaft to force [m]
 
 #Moment at Point
-x = 180*mm
-M = ((F*b**2)/l**3)*(x*(3*a+b)-a*l)
+x = (180+20)*mm
+M = ((F*(b**2))/(l**3))*(x*(3*a+b)-a*l)
 
 #Stress at point
 pi = np.pi
@@ -92,6 +92,32 @@ Sig1 = sigma_m1      #Change this value
 Sig2 = sigma_m2      #Change this value
 Sig3 = 0
 num = (Sig1-Sig2)**2+(Sig2-Sig3)**2+(Sig3-Sig1)**2
+dem = 2
+Sig_mean = np.sqrt(num/dem)   #Output
+
+#Alternating
+Sig1 = sigma_a1      #Change this value
+Sig2 = sigma_a2      #Change this value
+Sig3 = 0
+num = (Sig1-Sig2)**2+(Sig2-Sig3)**2+(Sig3-Sig1)**2
+dem = 2
+Sig_alt = np.sqrt(num/dem)   #Output
+
+"""Se"""
+S_e_prime = (0.5*S_ut)/MPa
+Se = k_a*k_b*k_c*k_d*k_e*k_f*S_e_prime
+
+
+"""LIFE CYCLES"""
+
+n_inv = (Sig_alt/Se)+(Sig_mean/S_ut)
+print(Sig_alt*MPa)
+print(Se*MPa)
+print(Sig_mean*MPa)
+print(Se)
+print(1/n_inv)
+
+
 
 """SOLUTION PRINTING"""
 print(""*50)
@@ -106,8 +132,12 @@ print("Tau_alternating",tau_alt*MPa,"MPa")
 print(""*50)
 print("INTERMEDIATE VALUES")
 print("Mohrs output mean (1,2) [Pa]",sigma_m1,sigma_m2)
-print("Mohrs output mean (1,2) [Pa]",sigma_a1,sigma_a2)
-
+print("Mohrs output alternating (1,2) [Pa]",sigma_a1,sigma_a2)
+print("Principal mean",Sig_mean)
+print("Principal alt",Sig_alt)
+print("Moment at Point",M,"N-m")
+print("a",a)
+print("x",x)
 
 
 

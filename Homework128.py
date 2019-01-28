@@ -64,6 +64,9 @@ tau_mean = (Tau_max+Tau_min)/2
 tau_alt = (Tau_max-Tau_min)/2
 
 
+
+
+
 """SOLUTION PRINTING"""
 print(""*50)
 print("PART A SOLUTIONS")

@@ -63,9 +63,35 @@ sigma_alt = (sigma_max-sigma_min)/2
 tau_mean = (Tau_max+Tau_min)/2
 tau_alt = (Tau_max-Tau_min)/2
 
+"""MOHRS CIRCLE"""
+#Mean
+simga_x = sigma_mean                  #Change this value
+simga_y = 0
+simga_avg = (simga_x+simga_y)/2
+tay_xy = tau_mean                     #Change this value
+R = np.sqrt((simga_x-simga_avg)**2+tay_xy**2)
 
+#Mohrs Output
+sigma_m1 = simga_avg+R       #Output of the mohrs function
+sigma_m2 = simga_avg-R
 
+#Alternating
+simga_x = sigma_alt                  #Change this value
+simga_y = 0
+simga_avg = (simga_x+simga_y)/2
+tay_xy = tau_alt                     #Change this value
+R = np.sqrt((simga_x-simga_avg)**2+tay_xy**2)
 
+#Mohrs Output
+sigma_a1 = simga_avg+R       #Output of the mohrs function
+sigma_a2 = simga_avg-R
+
+"""VON MISSES"""
+#Mean
+Sig1 = sigma_m1      #Change this value
+Sig2 = sigma_m2      #Change this value
+Sig3 = 0
+num = (Sig1-Sig2)**2+(Sig2-Sig3)**2+(Sig3-Sig1)**2
 
 """SOLUTION PRINTING"""
 print(""*50)
@@ -76,7 +102,11 @@ print("Tau_mean",tau_mean*MPa,"MPa")
 print("Tau_alternating",tau_alt*MPa,"MPa")
 
 
-
+"""INTERMEDIATE VALUES"""
+print(""*50)
+print("INTERMEDIATE VALUES")
+print("Mohrs output mean (1,2) [Pa]",sigma_m1,sigma_m2)
+print("Mohrs output mean (1,2) [Pa]",sigma_a1,sigma_a2)
 
 
 

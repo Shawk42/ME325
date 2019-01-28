@@ -5,7 +5,8 @@ mm = 0.001  #mm to m conversion
 MPa = 1/(1*(10**6)) #Pascal to MegaPascal
 
 '''GIVENS'''
-S_ut = 600     #Ultimate tensile strenth MPa
+#S_ut = 600     #Ultimate tensile strenth MPa
+S_ut = 600*(10**6)  #Ultimate tensile strength in Pa
 k_a = 0.915
 k_b = 0.858
 k_c = 0.59
@@ -50,6 +51,7 @@ V_AB = R_1
 Tau_shpt = V_AB
 
 #Total Shear
+#Tau_shpt = 0                       #ignoring shear of force
 Tau_max = Tau_toruqe_max+Tau_shpt
 Tau_min = Tau_torque_min+Tau_shpt
 
@@ -104,21 +106,19 @@ dem = 2
 Sig_alt = np.sqrt(num/dem)   #Output
 
 """Se"""
-S_e_prime = (0.5*S_ut)/MPa
-print(0.5*S_ut)
-print(S_e_prime)
+S_e_prime = (0.5*S_ut)
 Se = k_a*k_b*k_c*k_d*k_e*k_f*S_e_prime
-print(Se,"Se")
 
-"""LIFE CYCLES"""
 
-n_inv = (Sig_alt*MPa)/(Se*MPa)+(Sig_mean*MPa/S_ut)
-print(Sig_alt)
-print(Se)
-print(Sig_mean)
-print(S_ut)
-print(1/n_inv)
-print(n_inv)
+"""LIFECYCLE"""
+f = 0.86    #Pulled from graph
+aa = ((f*S_ut)**2)/Se
+bb = -(1/3)*np.log((f*S_ut)/Se)
+
+N = ((sigma_alt*MPa)/aa)**(1/bb)
+
+"""Safety Factor"""
+n_inv = (Sig_alt)/(Se)+(Sig_mean/S_ut)
 
 
 """SOLUTION PRINTING"""
@@ -128,7 +128,9 @@ print("Sigma_mean",sigma_mean*MPa,"MPa")
 print("Sigma_alternating",sigma_alt*MPa,"MPa")
 print("Tau_mean",tau_mean*MPa,"MPa")
 print("Tau_alternating",tau_alt*MPa,"MPa")
-
+print(""*50)
+print("Part B")
+print("Fatigue life",N)
 
 """INTERMEDIATE VALUES"""
 print(""*50)
@@ -140,9 +142,25 @@ print("Principal alt",Sig_alt)
 print("Moment at Point",M,"N-m")
 print("a",a)
 print("x",x)
+print("Se",Se)
+print("Life Cycles",N)
+print("Safety Factor",1/n_inv)
+print("Tau_max",Tau_max)
+print("Tau_min",Tau_min)
 
+#Goodman line
+x_1 = 0
+y_1 = Se
+x_2 = S_ut
+y_2 = 0
 
-
+plt.plot(x_1,y_1,"*")
+plt.plot(x_2,y_2,"*")
+plt.plot(Sig_mean,Sig_alt,"x")
+plt.title("Goodman Line with Load")
+plt.xlabel("Sigma Mean [MPa]")
+plt.ylabel("Signma Alt [Mpa]")
+plt.show()
 
 #Moment Diagram Plotting
 x_ab = np.linspace(0,a,10000)

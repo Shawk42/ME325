@@ -2,7 +2,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 mm = 0.001  #mm to m conversion
-MPa = 1/(1*(10**6))
+MPa = 1/(1*(10**6)) #Pascal to MegaPascal
 
 '''GIVENS'''
 S_ut = 600     #Ultimate tensile strenth MPa
@@ -105,18 +105,20 @@ Sig_alt = np.sqrt(num/dem)   #Output
 
 """Se"""
 S_e_prime = (0.5*S_ut)/MPa
+print(0.5*S_ut)
+print(S_e_prime)
 Se = k_a*k_b*k_c*k_d*k_e*k_f*S_e_prime
-
+print(Se,"Se")
 
 """LIFE CYCLES"""
 
-n_inv = (Sig_alt/Se)+(Sig_mean/S_ut)
-print(Sig_alt*MPa)
-print(Se*MPa)
-print(Sig_mean*MPa)
+n_inv = (Sig_alt*MPa)/(Se*MPa)+(Sig_mean*MPa/S_ut)
+print(Sig_alt)
 print(Se)
+print(Sig_mean)
+print(S_ut)
 print(1/n_inv)
-
+print(n_inv)
 
 
 """SOLUTION PRINTING"""

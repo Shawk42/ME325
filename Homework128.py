@@ -2,7 +2,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 mm = 0.001  #mm to m conversion
-
+MPa = 1/(1*(10**6))
 
 '''GIVENS'''
 S_ut = 600     #Ultimate tensile strenth MPa
@@ -27,6 +27,58 @@ a = l-b      #Distance from left end of shaft to force [m]
 x = 180*mm
 M = ((F*b**2)/l**3)*(x*(3*a+b)-a*l)
 
+#Stress at point
+pi = np.pi
+r = D/2
+y = r
+I = 0.25*pi*r**4
+sigma_bend = (M/I)*y
+
+#Total stress
+sigma_max = sigma_bend
+sigma_min = 0
+
+'''SHEAR'''
+#Torque component of shear
+J = (pi*D**4)/32
+Tau_toruqe_max = (T_max/J)*r
+Tau_torque_min = (T_min/J)*r
+
+#Shear at point
+R_1 = ((F*b**3)/l**3)*(3*a+b)
+V_AB = R_1
+Tau_shpt = V_AB
+
+#Total Shear
+Tau_max = Tau_toruqe_max+Tau_shpt
+Tau_min = Tau_torque_min+Tau_shpt
+
+if Tau_max <= Tau_min:
+    print("Max Shear is less than min shear")
+
+"""MEAN AND ALTERNATING STRESSES"""
+sigma_mean = (sigma_max+sigma_min)/2
+sigma_alt = (sigma_max-sigma_min)/2
+
+tau_mean = (Tau_max+Tau_min)/2
+tau_alt = (Tau_max-Tau_min)/2
+
+
+"""SOLUTION PRINTING"""
+print(""*50)
+print("PART A SOLUTIONS")
+print("Sigma_mean",sigma_mean*MPa,"MPa")
+print("Sigma_alternating",sigma_alt*MPa,"MPa")
+print("Tau_mean",tau_mean*MPa,"MPa")
+print("Tau_alternating",tau_alt*MPa,"MPa")
+
+
+
+
+
+
+
+
 #Moment Diagram Plotting
 x_ab = np.linspace(0,a,10000)
 x_bc = np.linspace(a,l,10000)
@@ -40,15 +92,4 @@ plt.xlabel("Meters")
 plt.ylabel("Moment (N-m)")
 plt.grid()
 plt.show()
-
-#Stress at point
-pi = np.pi
-r = D/2
-y = r
-I = 0.25*pi*r**4
-
-sigma_bend = (M/I)*y
-
-
-
 
